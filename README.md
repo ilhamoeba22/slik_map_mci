@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MAP Generator (Grahadi App) 🚀
 
-## Getting Started
+Aplikasi web internal untuk mengotomatisasi pembuatan dokumen **MAP (Memo Analisa Pembiayaan)** dari file TXT Grahadi, melakukan verifikasi data nasabah, memproses status SLIK OJK, dan melakukan integrasi database.
 
-First, run the development server:
+Aplikasi ini menggunakan teknologi modern dengan tampilan antarmuka (UI) premium bernuansa **Glassmorphism**, transisi **macOS Genie Effect**, serta **3D Swinging Pendulum Light Bulb**.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🛠️ Tech Stack
+
+*   **Framework**: Next.js 16.2.10 (Turbopack) - React
+*   **Database**: MySQL / MariaDB (XAMPP / Laragon)
+*   **Warp Effect**: SVG `feTurbulence` + `feDisplacementMap` + CSS keyframes (Genie Transition)
+*   **Template Processor**: Python (menggunakan library `python-docx` untuk memproses template `.docx`)
+*   **Styling**: Custom CSS (dengan dukungan variabel CSS modular & Dark Mode 3D)
+
+---
+
+## ✨ Fitur Utama
+
+1.  **Parsing & Integrasi Data TXT**: Mengurai file data TXT dari sistem Grahadi secara massal dan menyimpannya secara otomatis ke database lokal.
+2.  **Generasi Template MAP (.docx)**: Mengekspor file Word MAP secara dinamis berdasarkan data debitur dengan template `.docx` yang dapat diunduh langsung.
+3.  **Genie Modal Transition**: Animasi buka-tutup modal pemicu yang "dihisap" secara meliuk (organik seperti asap/cairan) menggunakan kombinasi SVG Displacement filter dan requestAnimationFrame.
+4.  **3D Rocker Light Switch**: Saklar lampu 3D interaktif di header untuk mengganti tema (Light / Dark Mode).
+5.  **Pendulum 3D Light Bulb**: Animasi bohlam lampu 3D yang berayun dengan pancaran sinar 270° yang halus pada area dashboard dalam tema gelap.
+6.  **Database Isolation**: Menangani error secara aman bila database eksternal (`db_wablast` atau `db_karyawan`) tidak merespons tanpa mengganggu performa dashboard utama.
+
+---
+
+## ⚙️ Persiapan & Konfigurasi Lokal
+
+### 1. Prasyarat
+*   Node.js (versi 20+)
+*   MySQL Server (XAMPP / Laragon)
+*   Python 3 (dengan library `python-docx` terinstal)
+
+### 2. Konfigurasi Environment (`.env.local`)
+Buat file bernama `.env.local` di root direktori dengan format berikut:
+```env
+DB_HOST=127.0.0.1
+DB_PORT=33006
+DB_USER=root
+DB_PASSWORD=password_database_anda
+DB_NAME=grahadi_mci
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Mengimpor Skema Database
+Impor file **`setup.sql`** yang disediakan ke server MySQL Anda untuk membuat database `grahadi_mci` beserta tabel `debiturs` dan `audit_logs`.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏃 Menjalankan Aplikasi
 
-## Learn More
+### Mode Pengembangan (Development)
+```bash
+npm install
+npm run dev
+```
+Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
 
-To learn more about Next.js, take a look at the following resources:
+### Mode Produksi (Production Build & Start)
+```bash
+npm run build
+npm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌐 Panduan Deployment di Server Windows (`192.168.1.199`)
 
-## Deploy on Vercel
+Project ini telah dikonfigurasi untuk berjalan 24/7 di latar belakang server lokal menggunakan **Windows Scheduled Task** di bawah akun **`SYSTEM`**.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Perintah Pendaftaran Background Service (PowerShell Admin)
+Jika Anda ingin memperbarui atau mendaftarkan ulang layanannya secara manual di server:
+```powershell
+# Buat action task scheduler
+$action = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c cd /d C:\Users\server\grahadi-app && npm run start -- --hostname 192.168.1.199 --port 3000"
+$trigger = New-ScheduledTaskTrigger -AtStartup
+$principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount
+$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Daftarkan task
+Register-ScheduledTask -TaskName "GrahadiAppService" -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force
+
+# Jalankan task
+Start-ScheduledTask -TaskName "GrahadiAppService"
+```
+
+### Cara Mengontrol Service lewat Command Line
+*   **Menghentikan Service**:
+    ```cmd
+    schtasks /end /tn GrahadiAppService
+    ```
+*   **Menjalankan Service**:
+    ```cmd
+    schtasks /run /tn GrahadiAppService
+    ```
+
+---
+
+## 🔒 Hak Cipta
+Copyright &copy; 2026 &bull; Developed by **IT, MIS, & Product Development BPRS HIK MCI**.
