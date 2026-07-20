@@ -1,51 +1,63 @@
-# MAP Generator (Grahadi App) 🚀
+# BPRS HIK MCI — Portal Pembiayaan Pensiunan & SLIK OJK 🚀
 
-Aplikasi web internal untuk mengotomatisasi pembuatan dokumen **MAP (Memo Analisa Pembiayaan)** dari file TXT Grahadi, melakukan verifikasi data nasabah, memproses status SLIK OJK, dan melakukan integrasi database.
+Aplikasi web internal profesional untuk mengotomatisasi pembuatan dokumen **MAP (Memo Analisa Pembiayaan)** pensiunan, verifikasi data nasabah, pengajuan request checking SLIK OJK (batch TXT), parser iDeb SLIK OJK (JSON), serta Dashboard Rekapitulasi Eksekutif.
 
-Aplikasi ini menggunakan teknologi modern dengan tampilan antarmuka (UI) premium bernuansa **Glassmorphism**, transisi **macOS Genie Effect**, serta **3D Swinging Pendulum Light Bulb**.
+Aplikasi ini dibangun menggunakan teknologi modern Next.js App Router dengan tampilan antarmuka (UI) premium bernuansa **Glassmorphism**, antarmuka yang responsif, *collapsible sidebar*, serta dukungan tema Terang / Gelap (Light / Dark Mode).
 
 ---
 
 ## 🛠️ Tech Stack
 
-*   **Framework**: Next.js 16.2.10 (Turbopack) - React
-*   **Database**: MySQL / MariaDB (XAMPP / Laragon)
-*   **Warp Effect**: SVG `feTurbulence` + `feDisplacementMap` + CSS keyframes (Genie Transition)
-*   **Template Processor**: Python (menggunakan library `python-docx` untuk memproses template `.docx`)
-*   **Styling**: Custom CSS (dengan dukungan variabel CSS modular & Dark Mode 3D)
+* **Framework**: Next.js 15+ (App Router, Turbopack) — React
+* **Database**: MySQL / MariaDB (`db_slik_map_mci` pada server `192.168.1.199:33006`)
+* **Template Processor**: Python (menggunakan library `python-docx` untuk memproses template `.docx` dinamis)
+* **Styling**: Custom Vanilla CSS (Design system modular dengan Glassmorphic Cards & Theme Tokens)
+* **Authentication**: SSO NIK Karyawan (Integrasi `db_karyawan`)
 
 ---
 
 ## ✨ Fitur Utama
 
-1.  **Parsing & Integrasi Data TXT**: Mengurai file data TXT dari sistem Grahadi secara massal dan menyimpannya secara otomatis ke database lokal.
-2.  **Generasi Template MAP (.docx)**: Mengekspor file Word MAP secara dinamis berdasarkan data debitur dengan template `.docx` yang dapat diunduh langsung.
-3.  **Genie Modal Transition**: Animasi buka-tutup modal pemicu yang "dihisap" secara meliuk (organik seperti asap/cairan) menggunakan kombinasi SVG Displacement filter dan requestAnimationFrame.
-4.  **3D Rocker Light Switch**: Saklar lampu 3D interaktif di header untuk mengganti tema (Light / Dark Mode).
-5.  **Pendulum 3D Light Bulb**: Animasi bohlam lampu 3D yang berayun dengan pancaran sinar 270° yang halus pada area dashboard dalam tema gelap.
-6.  **Database Isolation**: Menangani error secara aman bila database eksternal (`db_wablast` atau `db_karyawan`) tidak merespons tanpa mengganggu performa dashboard utama.
+1. **📊 Executive Dashboard & Rekapitulasi**:
+   * Rekapitulasi KPI (Total MAP, Total Plafond, Permintaan SLIK, Data SLIK Ter-parser).
+   * Grafik Tren Bulanan Pengajuan (Interactive SVG Bar Chart).
+   * Grafik Distribusi Segmen Nasabah SLIK (Interactive SVG Donut Chart).
+   * Activity Feeds pengajuan & hasil SLIK terbaru.
+
+2. **📁 MAP Generator (Memo Analisa Pembiayaan)**:
+   * Parsing & integrasi berkas TXT data pengajuan nasabah secara cepat.
+   * Ekspor otomatis ke dokumen Word MAP (.docx) yang siap diunduh dan dicetak.
+   * Pencarian, filter tahun/bulan, dan pagination server-side yang responsif.
+
+3. **🔍 Permintaan Checking SLIK OJK (`/slik-request`)**:
+   * Form pengajuan checking SLIK OJK perorangan maupun pasangan (lengkap dengan upload berkas KTP).
+   * Generator otomatis berkas **TXT Batch OJK** (`REQ_SLIK_BATCH_...txt`) yang sesuai dengan standar format OJK.
+   * Riwayat pengajuan dengan tata letak vertikal (*stacked layout*).
+
+4. **📥 Upload & Parser JSON Hasil SLIK (`/slik-parser`)**:
+   * Parser otomatis berkas JSON iDeb SLIK OJK (Perorangan & Perusahaan).
+   * Relasi data ke calon debitur (Nopen / Nomor Pensiun).
+   * Halaman Detail SLIK Interaktif (`/slik-detail/[id]/[type]`) yang memisahkan pembiayaan aktif, fasilitas lunas, dan rincian agunan.
+
+5. **🎨 Desain UI/UX & Fitur Kenyamanan**:
+   * **Collapsible Sidebar**: Sidebar responsif yang dapat di-minimize dengan ikon `mci_ico.ico`.
+   * **Iconic Theme Toggle**: Switch mode terang / gelap berbentuk ikon Matahari ☀️ dan Bulan 🌙.
+   * **Custom Exit Confirmation Modal**: Modal konfirmasi keluar berbasis glassmorphism (tanpa dialog bawaan browser).
+   * **Server-Side Pagination & Indexing**: Kinerja rendering instan tanpa lagging.
 
 ---
 
-## ⚙️ Persiapan & Konfigurasi Lokal
+## ⚙️ Konfigurasi Environment (`.env.local`)
 
-### 1. Prasyarat
-*   Node.js (versi 20+)
-*   MySQL Server (XAMPP / Laragon)
-*   Python 3 (dengan library `python-docx` terinstal)
+Buat file bernama `.env.local` di root direktori proyek dengan format berikut:
 
-### 2. Konfigurasi Environment (`.env.local`)
-Buat file bernama `.env.local` di root direktori dengan format berikut:
 ```env
-DB_HOST=127.0.0.1
+DB_HOST=192.168.1.199
 DB_PORT=33006
 DB_USER=root
-DB_PASSWORD=password_database_anda
-DB_NAME=grahadi_mci
+DB_PASSWORD=Xurang1234!!
+DB_NAME=db_slik_map_mci
 ```
-
-### 3. Mengimpor Skema Database
-Impor file **`setup.sql`** yang disediakan ke server MySQL Anda untuk membuat database `grahadi_mci` beserta tabel `debiturs` dan `audit_logs`.
 
 ---
 
@@ -56,7 +68,7 @@ Impor file **`setup.sql`** yang disediakan ke server MySQL Anda untuk membuat da
 npm install
 npm run dev
 ```
-Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
+Akses aplikasi di browser pada: [http://localhost:3000](http://localhost:3000)
 
 ### Mode Produksi (Production Build & Start)
 ```bash
@@ -66,37 +78,16 @@ npm run start
 
 ---
 
-## 🌐 Panduan Deployment di Server Windows (`192.168.1.199`)
+## 🌐 Layanan Background Service Windows Server (`192.168.1.199`)
 
-Project ini telah dikonfigurasi untuk berjalan 24/7 di latar belakang server lokal menggunakan **Windows Scheduled Task** di bawah akun **`SYSTEM`**.
+Aplikasi dikonfigurasi untuk berjalan 24/7 di latar belakang server lokal menggunakan **Windows Scheduled Task** / **PM2**.
 
-### Perintah Pendaftaran Background Service (PowerShell Admin)
-Jika Anda ingin memperbarui atau mendaftarkan ulang layanannya secara manual di server:
-```powershell
-# Buat action task scheduler
-$action = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c cd /d C:\Users\server\grahadi-app && npm run start -- --hostname 192.168.1.199 --port 3000"
-$trigger = New-ScheduledTaskTrigger -AtStartup
-$principal = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount
-$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
-
-# Daftarkan task
-Register-ScheduledTask -TaskName "GrahadiAppService" -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force
-
-# Jalankan task
-Start-ScheduledTask -TaskName "GrahadiAppService"
+### Menjalankan Service Manual via Node:
+```cmd
+npm run start -- --hostname 192.168.1.199 --port 3000
 ```
-
-### Cara Mengontrol Service lewat Command Line
-*   **Menghentikan Service**:
-    ```cmd
-    schtasks /end /tn GrahadiAppService
-    ```
-*   **Menjalankan Service**:
-    ```cmd
-    schtasks /run /tn GrahadiAppService
-    ```
 
 ---
 
-## 🔒 Hak Cipta
+## 🔒 Hak Cipta & Lisensi
 Copyright &copy; 2026 &bull; Developed by **IT, MIS, & Product Development BPRS HIK MCI**.
