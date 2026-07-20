@@ -110,11 +110,11 @@ export async function GET(request) {
       const nics = debiturs.map(d => d.nik);
       const placeholders = nics.map(() => '?').join(',');
       try {
-        const slikExistsRows = await queryWablast(
-          `SELECT NIK FROM tbl_data WHERE NIK IN (${placeholders})`,
+        const slikExistsRows = await query(
+          `SELECT nik FROM tbl_data WHERE nik IN (${placeholders})`,
           nics
         );
-        const activeSlikNiks = new Set(slikExistsRows.map(r => r.NIK));
+        const activeSlikNiks = new Set(slikExistsRows.map(r => r.nik));
         
         debiturs.forEach(d => {
           d.has_slik = activeSlikNiks.has(d.nik);

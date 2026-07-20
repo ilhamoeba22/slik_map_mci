@@ -8,6 +8,10 @@ export default function Navbar() {
   const [theme, setTheme] = useState('light');
   const [user, setUser] = useState(null);
 
+  // Logout modal states
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
+
   useEffect(() => {
     // Theme setup
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -32,8 +36,8 @@ export default function Navbar() {
     document.documentElement.setAttribute('data-theme', newTheme);
   };
 
-  const handleLogout = async () => {
-    if (!confirm('Apakah Anda yakin ingin keluar?')) return;
+  const confirmLogout = async () => {
+    setLogoutLoading(true);
     try {
       const res = await fetch('/api/auth/logout', { method: 'POST' });
       const data = await res.json();
@@ -42,62 +46,125 @@ export default function Navbar() {
       }
     } catch (err) {
       console.error('Logout error:', err);
+    } finally {
+      setLogoutLoading(false);
     }
   };
 
   return (
-    <nav className="navbar" style={{ padding: '0.45rem 0' }}>
-      <div className="container navbar-container">
-        <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
-          <Image 
-            src="/logo_mci.png" 
-            alt="BPRS HIK MCI Logo" 
-            width={180} 
-            height={65} 
-            style={{ objectFit: 'contain' }} 
-            priority
-          />
-        </Link>
+    <>
+      <nav className="navbar" style={{ padding: '0.45rem 0' }}>
+        <div className="container navbar-container">
+          <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
+            <Image 
+              src="/logo_mci.png" 
+              alt="BPRS HIK MCI Logo" 
+              width={180} 
+              height={65} 
+              style={{ objectFit: 'contain' }} 
+              priority
+            />
+          </Link>
 
-        {/* 3D Running Text (Marquee) */}
-        <div className="marquee-container">
-          <div className="marquee-text">
-            BPRS HIK MCI — GENERATOR MAP Pembiayaan Pensiunan — BPRS HIK MCI — GENERATOR MAP Pembiayaan Pensiunan — 
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {user && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ textAlign: 'right', fontSize: '0.8rem', display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{user.nama}</span>
+                  <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{user.role}</span>
+                </div>
+                <button 
+                  onClick={() => setShowLogoutModal(true)} 
+                  className="btn btn-secondary" 
+                  style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}
+                >
+                  Keluar
+                </button>
+              </div>
+            )}
+            
+            <button 
+              onClick={toggleTheme} 
+              className="theme-toggle-icon-btn" 
+              title={theme === 'light' ? 'Ubah ke Mode Gelap' : 'Ubah ke Mode Terang'}
+              style={{
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-glass)',
+                borderRadius: '50%',
+                width: '38px',
+                height: '38px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.15rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                color: 'var(--text-primary)'
+              }}
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
           </div>
         </div>
+      </nav>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {user && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div style={{ textAlign: 'right', fontSize: '0.8rem', display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{user.nama}</span>
-                <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{user.role}</span>
-              </div>
+      {/* Custom Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div 
+          className="no-print"
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0, 0, 0, 0.55)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            animation: 'fadeIn 0.2s ease-out'
+          }}
+        >
+          <div 
+            className="glass-card" 
+            style={{ 
+              maxWidth: '400px', 
+              width: '90%', 
+              padding: '2rem', 
+              textAlign: 'center',
+              boxShadow: 'var(--shadow-lg)',
+              border: '1px solid var(--border-glass)',
+              animation: 'scaleIn 0.2s ease-out'
+            }}
+          >
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🚪</div>
+            <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+              Konfirmasi Keluar Aplikasi
+            </h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '1.75rem', lineHeight: '1.5' }}>
+              Apakah Anda yakin ingin mengakhiri sesi dan keluar dari portal <b>BPRS MCI</b>?
+            </p>
+            
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
               <button 
-                onClick={handleLogout} 
-                className="btn btn-secondary" 
-                style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}
+                onClick={() => setShowLogoutModal(false)}
+                className="btn btn-secondary"
+                style={{ flex: 1, padding: '0.65rem 1rem', fontSize: '0.875rem' }}
+                disabled={logoutLoading}
               >
-                Keluar
+                Batal
+              </button>
+              <button 
+                onClick={confirmLogout}
+                className="btn btn-danger"
+                style={{ flex: 1, padding: '0.65rem 1rem', fontSize: '0.875rem' }}
+                disabled={logoutLoading}
+              >
+                {logoutLoading ? 'Keluar...' : 'Ya, Keluar'}
               </button>
             </div>
-          )}
-          {/* 3D Rocker Switch Theme Toggle */}
-          <div className="navbar-theme-switch">
-            <label className="rocker-switch" title={theme === 'light' ? 'Nyalakan Mode Gelap' : 'Nyalakan Mode Terang'}>
-              <input 
-                type="checkbox" 
-                checked={theme === 'light'} 
-                onChange={toggleTheme} 
-              />
-              <span className="rocker-switch-btn">
-                <span className="rocker-switch-text-on">I</span>
-                <span className="rocker-switch-text-off">O</span>
-              </span>
-            </label>
           </div>
         </div>
-      </div>
-    </nav>
+      )}
+    </>
   );
 }
