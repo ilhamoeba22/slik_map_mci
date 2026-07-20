@@ -7,7 +7,7 @@ export async function POST(request) {
   try {
     // 1. Check API Key Autentikasi
     const apiKey = request.headers.get('x-api-key');
-    if (!apiKey || apiKey !== process.env.GRAHADI_API_KEY) {
+    if (!apiKey || apiKey !== (process.env.API_KEY || 'MCI_API_SECRET')) {
       return NextResponse.json({ success: false, message: 'Unauthorized: Invalid API Key' }, { status: 401 });
     }
 
@@ -124,7 +124,7 @@ export async function POST(request) {
     // Create Audit Log
     await query(
       'INSERT INTO audit_logs (debitur_id, username, action, notes) VALUES (?, ?, ?, ?)',
-      [result.insertId, 'GRAHADI_API', 'SUBMIT', 'Data pengajuan diterima melalui API Grahadi']
+      [result.insertId, 'EXTERNAL_API', 'SUBMIT', 'Data pengajuan diterima melalui API External']
     );
 
     return NextResponse.json({

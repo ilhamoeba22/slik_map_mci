@@ -195,7 +195,7 @@ export async function GET(request, { params }) {
       JENIS_NASABAH: (debitur.jenis_nasabah || 'Perorangan').toUpperCase(),
       STATUS_NASABAH: (debitur.status_nasabah || 'Nasabah Baru').toUpperCase(),
       PRODUK_PEMBIAYAAN: (debitur.produk_pembiayaan || 'Multiguna Pensiunan').toUpperCase(),
-      MITRA_VENDOR: (debitur.mitra_vendor || 'Grahadi').toUpperCase(),
+      MITRA_VENDOR: (debitur.mitra_vendor || 'BPRS MCI').toUpperCase(),
       PKS_NO: (debitur.pks_no || '-').toUpperCase(),
       JENIS_PEMBIAYAAN: (debitur.jenis_pembiayaan || 'Multiguna').toUpperCase(),
       JENIS_AKAD: (debitur.jenis_akad || 'Murabahah').toUpperCase(),

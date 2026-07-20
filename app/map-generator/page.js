@@ -746,7 +746,7 @@ export default function Home() {
         <div style={{ display: 'flex', justifyItems: 'center', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
           <div>
             <h1 style={{ fontSize: '1.75rem', marginBottom: '0.25rem' }}>Daftar Pengajuan Pensiunan</h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Upload file TXT dari Grahadi untuk menghasilkan dokumen MAP Word (.docx) secara instan.</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Upload file TXT pengajuan untuk menghasilkan dokumen MAP Word (.docx) secara instan.</p>
           </div>
           <button onClick={triggerUploadModal} className="btn btn-primary" style={{ padding: '0.8rem 1.5rem', border: 'none' }}>
             <span style={{ fontSize: '1.2rem', marginRight: '0.5rem', lineHeight: 1 }}>+</span> Upload TXT
@@ -1448,7 +1448,7 @@ export default function Home() {
                 {/* V. Approval Section */}
                 <div style={{ marginBottom: '2rem' }}>
                   <h3 style={{ fontSize: '1.05rem', color: 'var(--accent-primary)', borderBottom: '1px dashed var(--border-glass)', paddingBottom: '0.4rem', marginBottom: '1rem' }}>
-                    V. Informasi Persetujuan Komite (Grahadi)
+                    V. Informasi Persetujuan Komite
                   </h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', background: 'rgba(255,255,255,0.01)', padding: '1.25rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-glass)' }}>
                     <div>

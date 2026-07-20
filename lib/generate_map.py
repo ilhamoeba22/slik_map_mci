@@ -144,7 +144,7 @@ def generate_map(payload):
         set_cell_text_preserve_style(table_0.rows[3].cells[1], payload.get('PRODUK_PEMBIAYAAN', 'Multiguna Pensiunan'))
         set_cell_text_preserve_style(table_0.rows[3].cells[3], payload.get('STATUS_PEMBIAYAAN', 'SK Ditangan'))
         # Row 4
-        set_cell_text_preserve_style(table_0.rows[4].cells[1], payload.get('MITRA_VENDOR', 'Grahadi'))
+        set_cell_text_preserve_style(table_0.rows[4].cells[1], payload.get('MITRA_VENDOR', 'BPRS MCI'))
         set_cell_text_preserve_style(table_0.rows[4].cells[3], payload.get('ASURANSI', 'Reliance (Asuransi Jiwa)'))
         # Row 5
         set_cell_text_preserve_style(table_0.rows[5].cells[1], payload.get('PKS_NO', '-'))

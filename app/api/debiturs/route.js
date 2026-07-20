@@ -199,7 +199,7 @@ export async function POST(request) {
     const keputusan_approval = formData.get('keputusan_approval');
     const catatan_analisa = formData.get('catatan_analisa');
 
-    // Additional dynamic fields from Grahadi TXT
+    // Additional dynamic fields from TXT
     const jenis_kelamin = formData.get('jenis_kelamin');
     const nama_pasangan = formData.get('nama_pasangan');
     const nik_pasangan = formData.get('nik_pasangan');
